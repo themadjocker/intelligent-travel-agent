@@ -9,7 +9,9 @@ export default function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        <FeaturesSection />
+        <section id="features">
+          <FeaturesSection />
+        </section>
       </main>
       <Footer />
     </div>
