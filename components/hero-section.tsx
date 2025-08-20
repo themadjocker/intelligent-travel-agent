@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowRight } from "lucide-react"
@@ -47,9 +48,16 @@ export function HeroSection() {
               className="flex-1 text-base border-0 bg-transparent focus:ring-0 focus:outline-none placeholder:text-muted-foreground"
               onKeyPress={(e) => e.key === "Enter" && handleCreateTrip()}
             />
-            <Button onClick={handleCreateTrip} size="lg" className="whitespace-nowrap font-semibold">
-              Create My Trip
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button
+              onClick={handleCreateTrip}
+              size="lg"
+              className="whitespace-nowrap font-semibold animate-pulse hover:animate-none hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              asChild
+            >
+              <Link href="/planner/new">
+                Create My Trip
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>

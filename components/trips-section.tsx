@@ -1,16 +1,17 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { CalendarDays, MapPin, Users, ChevronDown, ChevronUp } from "lucide-react"
+import { CalendarDays, MapPin, Users, ChevronDown, ChevronUp, Compass } from "lucide-react"
 
 const upcomingTrips = [
   {
-    id: 1,
+    id: "tokyo-japan",
     destination: "Tokyo, Japan",
     dates: "March 15-25, 2025",
     status: "Planning",
@@ -21,7 +22,7 @@ const upcomingTrips = [
     image: "/placeholder.svg?height=200&width=300",
   },
   {
-    id: 2,
+    id: "barcelona-spain",
     destination: "Barcelona, Spain",
     dates: "June 8-15, 2025",
     status: "Confirmed",
@@ -32,7 +33,7 @@ const upcomingTrips = [
 
 const pastTrips = [
   {
-    id: 3,
+    id: "bali-indonesia",
     destination: "Bali, Indonesia",
     dates: "December 10-20, 2024",
     status: "Completed",
@@ -43,7 +44,7 @@ const pastTrips = [
     image: "/placeholder.svg?height=200&width=300",
   },
   {
-    id: 4,
+    id: "paris-france",
     destination: "Paris, France",
     dates: "September 5-12, 2024",
     status: "Completed",
@@ -52,38 +53,41 @@ const pastTrips = [
   },
 ]
 
+const demoUpcomingTrips: typeof upcomingTrips = []
+
 export function TripsSection() {
   const [isPastTripsOpen, setIsPastTripsOpen] = useState(false)
 
   const TripCard = ({ trip }: { trip: (typeof upcomingTrips)[0] }) => (
-    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-      <div className="aspect-video relative overflow-hidden rounded-t-lg">
-        <img
-          src={trip.image || "/placeholder.svg"}
-          alt={trip.destination}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute top-3 right-3">
-          <Badge
-            variant={trip.status === "Confirmed" ? "default" : trip.status === "Planning" ? "secondary" : "outline"}
-          >
-            {trip.status}
-          </Badge>
-        </div>
-      </div>
-      <CardContent className="p-4">
-        <div className="space-y-3">
-          <div>
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-primary" />
+    <Link href={`/planner/${trip.id}`}>
+      <Card className="group hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden">
+        <div className="aspect-video relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
+          <img
+            src={trip.image || "/placeholder.svg"}
+            alt={trip.destination}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+          <div className="absolute top-3 right-3 z-20">
+            <Badge
+              variant={trip.status === "Confirmed" ? "default" : trip.status === "Planning" ? "secondary" : "outline"}
+              className="bg-background/90 backdrop-blur-sm"
+            >
+              {trip.status}
+            </Badge>
+          </div>
+          <div className="absolute bottom-3 left-3 right-3 z-20 text-white">
+            <h3 className="font-semibold text-lg flex items-center gap-2 mb-1">
+              <MapPin className="h-4 w-4" />
               {trip.destination}
             </h3>
-            <p className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+            <p className="text-sm opacity-90 flex items-center gap-2">
               <CalendarDays className="h-4 w-4" />
               {trip.dates}
             </p>
           </div>
-
+        </div>
+        <CardContent className="p-4">
           {trip.collaborators.length > 0 && (
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />
@@ -107,9 +111,9 @@ export function TripsSection() {
               </div>
             </div>
           )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   )
 
   return (
@@ -118,24 +122,30 @@ export function TripsSection() {
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground">Your Upcoming Trips</h2>
-          {upcomingTrips.length === 0 && <Button variant="outline">Browse Destinations</Button>}
         </div>
 
-        {upcomingTrips.length > 0 ? (
+        {demoUpcomingTrips.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {upcomingTrips.map((trip) => (
+            {demoUpcomingTrips.map((trip) => (
               <TripCard key={trip.id} trip={trip} />
             ))}
           </div>
         ) : (
-          <Card className="p-8 text-center">
+          <Card className="p-12 text-center bg-gradient-to-br from-primary/5 to-accent/5 border-dashed border-2 border-primary/20">
             <div className="max-w-md mx-auto">
-              <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No upcoming trips yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Start planning your next adventure and let our AI create the perfect itinerary for you.
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Compass className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">Your adventures are waiting!</h3>
+              <p className="text-muted-foreground mb-6">
+                Ready to explore the world? Let our AI create the perfect itinerary tailored just for you.
               </p>
-              <Button>Plan Your First Trip</Button>
+              <Button size="lg" asChild>
+                <Link href="/planner/new">
+                  <Compass className="mr-2 h-4 w-4" />
+                  Plan Your First Trip
+                </Link>
+              </Button>
             </div>
           </Card>
         )}
@@ -144,7 +154,7 @@ export function TripsSection() {
       {/* Past Trips */}
       <Collapsible open={isPastTripsOpen} onOpenChange={setIsPastTripsOpen}>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+          <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:bg-transparent">
             <h2 className="text-2xl font-bold text-foreground">Past Adventures</h2>
             {isPastTripsOpen ? (
               <ChevronUp className="h-5 w-5 text-muted-foreground" />

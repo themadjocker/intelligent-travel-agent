@@ -1,17 +1,25 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Sparkles, MapPin, Calendar, Users } from "lucide-react"
 
 export function TripPlanningCTA() {
-  const [user] = useState({ name: "Sarah" })
+  const [userName, setUserName] = useState("User")
+
+  useEffect(() => {
+    const savedName = localStorage.getItem("user_name")
+    if (savedName) {
+      setUserName(savedName)
+    }
+  }, [])
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Welcome back, {user.name}!</h1>
+        <h1 className="text-3xl font-bold text-foreground">Welcome back, {userName}!</h1>
         <p className="text-muted-foreground mt-2">Ready to plan your next adventure?</p>
       </div>
 
@@ -27,9 +35,11 @@ export function TripPlanningCTA() {
                 Let our AI create the perfect itinerary based on your vibe. Just describe your dream getaway and we'll
                 handle the rest.
               </p>
-              <Button size="lg" className="font-semibold">
-                <Sparkles className="mr-2 h-4 w-4" />
-                Start Planning
+              <Button size="lg" className="font-semibold" asChild>
+                <Link href="/planner/new">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Start Planning
+                </Link>
               </Button>
             </div>
 

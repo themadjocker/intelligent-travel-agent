@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/logo"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -24,9 +25,7 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-foreground">
-            TravelAI
-          </Link>
+          <Logo />
 
           <div className="hidden md:flex items-center space-x-8">
             <Link href="#features" className="text-foreground hover:text-primary transition-colors">
@@ -38,9 +37,9 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link href="/auth">Login</Link>
-            </Button>
+            <Link href="/auth" className="text-foreground hover:text-primary transition-colors">
+              Login
+            </Link>
             <Button asChild>
               <Link href="/auth">Sign Up</Link>
             </Button>

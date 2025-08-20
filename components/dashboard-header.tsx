@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -12,22 +11,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Logo } from "@/components/logo"
+import { useAuth } from "@/components/auth-provider"
 import { Bell, Settings, LogOut, User } from "lucide-react"
 
 export function DashboardHeader() {
-  const [user] = useState({
-    name: "Sarah Johnson",
-    email: "sarah@example.com",
+  const [user, setUser] = useState({
+    name: "User",
+    email: "user@example.com",
     avatar: "/placeholder.svg?height=40&width=40",
   })
+
+  const { logout } = useAuth()
+
+  useEffect(() => {
+    const savedName = localStorage.getItem("user_name")
+    if (savedName) {
+      setUser((prev) => ({ ...prev, name: savedName }))
+    }
+  }, [])
 
   return (
     <header className="bg-card border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-primary">
-            TravelAI
-          </Link>
+          <Logo />
 
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm">
@@ -65,7 +73,7 @@ export function DashboardHeader() {
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
