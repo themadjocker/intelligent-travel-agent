@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import dynamic from "next/dynamic"
 import type { Activity } from "@/lib/types"
 
 interface InteractiveMapProps {
@@ -9,23 +10,29 @@ interface InteractiveMapProps {
   onActivityClick: (activity: Activity) => void
 }
 
+const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false })
+
+const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), { ssr: false })
+
+const Marker = dynamic(() => import("react-leaflet").then((mod) => mod.Marker), { ssr: false })
+
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { ssr: false })
+
 export function InteractiveMap({ activities, selectedActivity, onActivityClick }: InteractiveMapProps) {
-  const [Map, setMap] = useState<any>(null)
   const [isClient, setIsClient] = useState(false)
+  const [isMapReady, setIsMapReady] = useState(false)
+  const mapRef = useRef<any>(null)
 
   useEffect(() => {
     setIsClient(true)
+    const timer = setTimeout(() => {
+      setIsMapReady(true)
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    if (isClient) {
-      import("react-leaflet").then((leaflet) => {
-        setMap(leaflet)
-      })
-    }
-  }, [isClient])
-
-  if (!isClient || !Map) {
+  if (!isClient || !isMapReady) {
     return (
       <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center">
         <div className="text-center">
@@ -36,7 +43,15 @@ export function InteractiveMap({ activities, selectedActivity, onActivityClick }
     )
   }
 
-  const { MapContainer, TileLayer, Marker, Popup } = Map
+  if (!activities || activities.length === 0) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">No activities to display on map</p>
+        </div>
+      </div>
+    )
+  }
 
   // Calculate center point from all activities
   const centerLat = activities.reduce((sum, activity) => sum + activity.location.coordinates.lat, 0) / activities.length
@@ -45,10 +60,14 @@ export function InteractiveMap({ activities, selectedActivity, onActivityClick }
   return (
     <div className="w-full h-full rounded-lg overflow-hidden">
       <MapContainer
+        ref={mapRef}
         center={[centerLat, centerLng]}
         zoom={12}
         style={{ height: "100%", width: "100%" }}
-        key={`${centerLat}-${centerLng}`}
+        key={`map-${activities.length}-${centerLat}-${centerLng}`}
+        whenReady={() => {
+          console.log("[v0] Map is ready and initialized")
+        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -59,7 +78,10 @@ export function InteractiveMap({ activities, selectedActivity, onActivityClick }
             key={activity.id}
             position={[activity.location.coordinates.lat, activity.location.coordinates.lng]}
             eventHandlers={{
-              click: () => onActivityClick(activity),
+              click: () => {
+                console.log("[v0] Marker clicked:", activity.name)
+                onActivityClick(activity)
+              },
             }}
           >
             <Popup>
