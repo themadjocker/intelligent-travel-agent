@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,12 +10,21 @@ import { Logo } from "@/components/logo"
 import { CalendarDays, MapPin, Users, ArrowLeft, Map, Clock, Plus, Save } from "lucide-react"
 import { mockTripData } from "@/lib/mock-data"
 import type { Trip, Activity, Collaborator } from "@/lib/types"
-import { InteractiveMap } from "@/components/interactive-map"
 import { AddDestinationModal } from "@/components/add-destination-modal"
 import { AdjustDatesModal } from "@/components/adjust-dates-modal"
 import { InviteCollaboratorsModal } from "@/components/invite-collaborators-modal"
 import { ActivityCard } from "@/components/activity-card"
 import { Toast } from "@/components/toast"
+
+const InteractiveMap = dynamic(
+  () => import("@/components/interactive-map").then((mod) => ({ default: mod.InteractiveMap })),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-full text-muted-foreground">A map is loading...</div>
+    ),
+    ssr: false,
+  },
+)
 
 interface PlannerPageProps {
   params: {

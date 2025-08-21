@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Logo } from "@/components/logo"
 import { Sparkles, MapPin, Calendar, Users, ArrowRight, Wand2 } from "lucide-react"
 import { inspirationTags } from "@/lib/mock-data"
+import { createClient } from "@/lib/supabase-client"
 
 const vibeExamples = [
   "Relaxing beach getaway with sunset dinners",
@@ -49,19 +50,40 @@ export default function NewPlannerPage() {
       setCurrentLoadingMessage(loadingMessages[messageIndex])
     }, 800)
 
-    // Simulate AI processing for 5 seconds
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+    try {
+      const supabase = createClient()
 
-    clearInterval(messageInterval)
+      const { data: newTrip, error } = await supabase
+        .from("trips")
+        .insert([
+          {
+            title: `Trip: ${description.slice(0, 50)}${description.length > 50 ? "..." : ""}`,
+            vibe_description: description.trim(),
+          },
+        ])
+        .select()
+        .single()
 
-    // Generate a trip ID based on the description
-    const tripId = description
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .replace(/\s+/g, "-")
-      .substring(0, 30)
+      if (error) {
+        console.error("Error creating trip:", error)
+        clearInterval(messageInterval)
+        setIsGenerating(false)
+        alert("Failed to create trip. Please try again.")
+        return
+      }
 
-    router.push(`/planner/${tripId}`)
+      // Simulate AI processing for remaining time
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+
+      clearInterval(messageInterval)
+
+      router.push(`/planner/${newTrip.id}`)
+    } catch (error) {
+      console.error("Error generating trip:", error)
+      clearInterval(messageInterval)
+      setIsGenerating(false)
+      alert("Failed to create trip. Please try again.")
+    }
   }
 
   const handleExampleClick = (example: string) => {
