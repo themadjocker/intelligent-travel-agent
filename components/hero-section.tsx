@@ -51,7 +51,7 @@ export function HeroSection() {
             <Button
               onClick={handleCreateTrip}
               size="lg"
-              className="whitespace-nowrap font-semibold relative overflow-hidden !bg-gradient-to-r !from-blue-600 !via-blue-700 !to-teal-600 bg-size-200 animate-gradient-x hover:animate-none hover:scale-110 hover:rotate-1 transition-all duration-500 shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 group !text-white"
+              className="whitespace-nowrap font-semibold relative overflow-hidden !bg-gradient-to-r !from-blue-600 !via-blue-700 !to-teal-600 bg-size-200 animate-gradient-x hover:animate-none hover:scale-110 hover:rotate-1 transition-all duration-500 shadow-lg hover:shadow-2xl hover:shadow-blue-500/25 group !text-white animate-fade-in-up"
               asChild
             >
               <Link href="/planner/new">
