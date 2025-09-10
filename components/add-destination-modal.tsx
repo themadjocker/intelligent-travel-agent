@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { Activity, Day } from "@/lib/types"
+import { geocode } from "@/lib/geocoder"
 
 interface AddDestinationModalProps {
   isOpen: boolean
@@ -30,6 +31,25 @@ export function AddDestinationModal({ isOpen, onClose, onAdd, days }: AddDestina
     category: "sightseeing" as Activity["category"],
     dayId: "",
   })
+
+  const [isGeocoding, setIsGeocoding] = useState(false)
+
+  const handleLocationChange = async (locationName: string) => {
+    setFormData((prev) => ({ ...prev, locationName }))
+
+    if (locationName.trim().length > 2) {
+      setIsGeocoding(true)
+      const coordinates = await geocode(locationName)
+      if (coordinates) {
+        setFormData((prev) => ({
+          ...prev,
+          lat: coordinates.lat.toString(),
+          lng: coordinates.lng.toString(),
+        }))
+      }
+      setIsGeocoding(false)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -117,13 +137,25 @@ export function AddDestinationModal({ isOpen, onClose, onAdd, days }: AddDestina
 
           <div>
             <Label htmlFor="location">Location Name</Label>
-            <Input
-              id="location"
-              value={formData.locationName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, locationName: e.target.value }))}
-              placeholder="e.g., Tokyo Tower"
-              required
-            />
+            <div className="relative">
+              <Input
+                id="location"
+                value={formData.locationName}
+                onChange={(e) => handleLocationChange(e.target.value)}
+                placeholder="e.g., Tokyo Tower"
+                required
+              />
+              {isGeocoding && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+            </div>
+            {formData.lat && formData.lng && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Coordinates: {Number.parseFloat(formData.lat).toFixed(4)}, {Number.parseFloat(formData.lng).toFixed(4)}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-2">

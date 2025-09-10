@@ -10,19 +10,13 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
-    "@radix-ui/react-avatar": "latest",
-    "@radix-ui/react-avatar": "latest",
     "@radix-ui/react-collapsible": "latest",
     "@radix-ui/react-dialog": "latest",
-    "@radix-ui/react-dropdown-menu": "latest",
-    "@radix-ui/react-dropdown-menu": "latest",
     "@radix-ui/react-label": "latest",
     "@radix-ui/react-select": "latest",
     "@radix-ui/react-separator": "latest",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "^2.39.0",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "latest",
@@ -31,18 +25,17 @@
     "next": "14.2.16",
     "react": "^18",
     "react-dom": "^18",
-    "react-leaflet": "^4.2.1",
+    "react-leaflet": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "tw-animate-css": "latest",
     "typescript": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@tailwindcss/postcss": "latest",
     "postcss": "^8.5",
+    "tailwindcss": "4.1.13",
     "typescript": "^5"
   }
 }

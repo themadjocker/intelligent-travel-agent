@@ -51,12 +51,13 @@ export function HeroSection() {
             <Button
               onClick={handleCreateTrip}
               size="lg"
-              className="whitespace-nowrap font-semibold animate-pulse hover:animate-none hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="whitespace-nowrap font-semibold relative overflow-hidden bg-gradient-to-r from-primary via-primary to-accent bg-size-200 animate-gradient-x hover:animate-none hover:scale-110 hover:rotate-1 transition-all duration-500 shadow-lg hover:shadow-2xl hover:shadow-primary/25 group text-white"
               asChild
             >
               <Link href="/planner/new">
-                Create My Trip
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <span className="relative z-10 text-white font-bold drop-shadow-sm">Create My Trip</span>
+                <ArrowRight className="ml-2 h-4 w-4 relative z-10 text-white group-hover:translate-x-1 group-hover:scale-110 transition-all duration-300" />
               </Link>
             </Button>
           </div>
