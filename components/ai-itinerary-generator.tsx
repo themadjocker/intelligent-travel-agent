@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
-import { Sparkles, MapPin, Clock, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
+import { Sparkles, MapPin, Clock, ChevronDown, ChevronUp, Loader as Loader2 } from "lucide-react"
 
 interface Activity {
   time: string
